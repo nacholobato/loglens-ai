@@ -83,8 +83,11 @@ const Index = () => {
       });
     } catch (error) {
       console.error('Prediction error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast.error('Analysis Failed', {
-        description: 'Could not connect to the API. Make sure the server is running.',
+        description: errorMessage.includes('fetch') 
+          ? 'CORS error or API unreachable. Ensure FastAPI has CORS enabled and is running.'
+          : `Error: ${errorMessage}`,
       });
     } finally {
       setIsLoading(false);
